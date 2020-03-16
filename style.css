@@ -1,0 +1,29 @@
+#body {
+  margin: 0;
+}
+.container {
+  padding: 0 100px;
+}
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #0D47A1;
+  height: 64px;
+}
+
+.header h1 {
+  color:#ffffff;
+  width: 260px;
+  margin: 0;
+}
+
+@media (max-width: 992px) {
+  
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding: 0;
+  }
+}
