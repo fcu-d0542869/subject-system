@@ -18,12 +18,24 @@
   margin: 0;
 }
 
-@media (max-width: 992px) {
-  
+@media (min-width: 993px) {
+  .chooseCourse {
+    display: flex;
+  }
 }
+
+@media (max-width: 992px) {
+  .chooseCourse {
+    display: block;
+  }
+}
+
 
 @media (max-width: 576px) {
   .container {
     padding: 0;
+  }
+  .chooseCourse {
+    display: block;
   }
 }
