@@ -41,6 +41,13 @@ while ($row = mysqli_fetch_array($result)) {
 if (isset($_POST['code'])) {
     $code = $_POST['code'];
     $error = false;
+    $sameTime = false;
+    $overCredit = false;
+    $overSeat = false;
+    $codeTime = array();
+    $dayTime = array();
+    $totalCredit = 0;
+    $codeCredit = 0;
     $selectCourse = null;
     $sql = "SELECT course_name FROM course where course_id = \"" . $code . "%\";";
     $result = mysqli_query($conn, $sql) or die('MySQL query error');
@@ -51,12 +58,12 @@ if (isset($_POST['code'])) {
         for ($i = 0; $i < count($studentCourseID); $i++) {
             if ($studentCourseID[$i] == $code) {
                 $error = true;
-                echo  '已選該課程';;
+                echo '已選該課程';
             }
         }
     }
-    if($error != true){
-        $sql="SELECT * FROM select_list natual NATURAL  JOIN course where student_id like \"" . $studentID . "%\";";
+    if ($error != true) {
+        $sql = "SELECT * FROM select_list  NATURAL JOIN course where student_id like \"" . $studentID . "%\";";
         $result = mysqli_query($conn, $sql) or die('MySQL query error');
         while ($row = mysqli_fetch_array($result)) {
             // echo '<p>'.$row['course_name'].'<p>';
@@ -69,9 +76,65 @@ if (isset($_POST['code'])) {
             }
         }
 
-    }
-    
+    }if ($sameTime != true && $error != true) {
+        $sql = "SELECT day, time FROM select_list  NATURAL JOIN course_time where student_id like \"" . $studentID . "%\";";
+        $result = mysqli_query($conn, $sql) or die('MySQL query error');
+        while ($row = mysqli_fetch_array($result)) {
+            array_push($dayTime, [$row['day'], $row['time']]);
+        }
+        $sql = "SELECT day, time FROM course_time where course_id = \"" . $code . "%\";";
+        $result = mysqli_query($conn, $sql) or die('MySQL query error');
+        while ($row = mysqli_fetch_array($result)) {
+            array_push($codeTime, [$row['day'], $row['time']]);
+        }
+        if ($result != null) {
+            for ($i = 0; $i < count($dayTime); $i++) {
+                for ($j = 0; $j < count($codeTime[$j]); $j++) {
+                    if ($dayTime[$i] == $codeTime[$j]) {
+                        $sameTime = true;
 
+                    }
+                }
+            }
+            if ($sameTime == true) {
+                echo '<p>衝堂<p>';
+            }
+
+        }
+
+        // print_r($dayTime);
+        // print_r($codeTime[0]);
+
+    }
+    if ($overCredit != true && $sameTime != true) {
+
+        $sql = "SELECT sum(credit) as totalcredit FROM select_list  NATURAL JOIN course where student_id like \"" . $studentID . "%\";";
+        $result = mysqli_query($conn, $sql) or die('MySQL query error');
+        while ($row = mysqli_fetch_array($result)) {
+            $totalCredit = $row['totalcredit'];
+        }
+        $sql = "SELECT credit FROM course where course_id = \"" . $code . "%\";";
+        $result = mysqli_query($conn, $sql) or die('MySQL query error');
+        while ($row = mysqli_fetch_array($result)) {
+            $codeCredit = $row['credit'];
+        }
+        if ($totalCredit + $codeCredit > 30) {
+            $overCredit = true;
+            echo '<p>學分超過30學分<p>';
+        }
+    }
+
+    if ($overSeat != true && $overCredit != true) {
+        $sql = "SELECT seat,current_seat FROM seat where course_id = \"" . $code . "%\";";
+        $result = mysqli_query($conn, $sql) or die('MySQL query error');
+        while ($row = mysqli_fetch_array($result)) {
+            if ($row['current_seat'] >= $row['seat']) {
+                $overSeat = true;
+                echo '<p>沒有位置了<p>';
+            }
+        }
+
+    }
 
 }
 
