@@ -1,9 +1,10 @@
-<a href = "index.php"> Go Query Interface</a> <p>
+<a href = "index.php"> 重新登入</a> <p>
 <a href = "home.php">回到選單頁</a>
 
 <?php
 $studentID = $_COOKIE["studentID"];
 echo '<br><br>您的學號：' . $studentID;
+
 ?>
 <style>
 table{
