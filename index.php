@@ -28,7 +28,7 @@ if (isset($_POST['init'])) {
         $sql = "DELETE FROM select_list;";
         $result = mysqli_query($conn, $sql) or die('MySQL query error');
 
-        $sql = "SELECT student_id, course_id FROM student NATURAL JOIN course";
+        $sql = "SELECT student_id, course_id FROM student NATURAL JOIN course WHERE major = 'M'";
         $result = mysqli_query($conn, $sql) or die('MySQL query error');
 
         if ($result->num_rows > 0) {
