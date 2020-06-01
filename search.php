@@ -16,8 +16,7 @@ echo '<br><br>您的學號：' . $studentID;
   <input type='text' name='courseName' id='courseName' />
   <input type='submit' id='subCourseName' value='送出' data-action="submit"/>
 </form>
-
-
+<!-- 
 <script type="text/javascript">
 //   const submitBtn = document.querySelector('[data-action="submit"]');
 //   submitBtn.addEventListener("click", processFormData);
@@ -26,7 +25,7 @@ echo '<br><br>您的學號：' . $studentID;
 //   const codeElement = document.getElementById("code");
 //   const code = codeElement.value;
 // }
-</script>
+</script> -->
 
 <style>
 table{
@@ -39,7 +38,6 @@ table{
 </style>
 
 <?php
-
 $dbhost = '127.0.0.1';
 $dbuser = 'test';
 $dbpass = 'test1234';
@@ -52,7 +50,7 @@ if (isset($_POST['code'])) {
     $code = $_POST['code'];
     $sql = "SELECT * FROM course where course_id = \"" . $code . "%\";";
     $result = mysqli_query($conn, $sql) or die('MySQL query error');
-    if ($result != null) {
+    if ($result->num_rows > 0) {
         echo '<table border="1">
       <tr>
         <td>course_id</td>
@@ -84,7 +82,6 @@ if (isset($_POST['code'])) {
     }
     else{
       echo '查無此課程';
-
     }
 }
 else if(isset($_POST['courseName'])){

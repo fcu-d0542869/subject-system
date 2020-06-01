@@ -27,10 +27,19 @@ if ($studentID != null) {
     mysqli_query($conn, "SET NAMES 'utf8'");
     mysqli_select_db($conn, $dbname);
 
+    $sql = "SELECT sum(credit) as totalcredit FROM select_list  NATURAL JOIN course where student_id = \"" . $studentID . "\";";
+    $result = mysqli_query($conn, $sql) or die('MySQL query error');
+    if ($result->num_rows > 0) {
+        while ($row = mysqli_fetch_array($result)) {
+            $totalCredit = $row['totalcredit'];
+        }
+        echo '目前學分: '.$totalCredit;
+    }
+
     $courseTime = "CREATE VIEW coursetime AS SELECT * FROM course  NATURAL JOIN course_time";
     // $result = mysqli_query($conn, $sql) or die('MySQL query error');
 
-    $sql = "SELECT * FROM select_list  NATURAL JOIN coursetime  where student_id like \"" . $studentID . "%\" ORDER BY day;";
+    $sql = "SELECT * FROM select_list  NATURAL JOIN coursetime  where student_id = \"" . $studentID . "\" ORDER BY day;";
 
     $result = mysqli_query($conn, $sql) or die('MySQL query error');
     echo '<table border="1">
