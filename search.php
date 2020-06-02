@@ -16,7 +16,7 @@ echo '<br><br>您的學號：' . $studentID;
   <input type='text' name='courseName' id='courseName' />
   <input type='submit' id='subCourseName' value='送出' data-action="submit"/>
 </form>
-<!-- 
+<!--
 <script type="text/javascript">
 //   const submitBtn = document.querySelector('[data-action="submit"]');
 //   submitBtn.addEventListener("click", processFormData);
@@ -79,16 +79,14 @@ if (isset($_POST['code'])) {
         while ($row = mysqli_fetch_array($result)) {
             echo '<p>星期' . $row['day'] . ' 第' . $row['time'] . '節<p>';
         }
+    } else {
+        echo '查無此課程';
     }
-    else{
-      echo '查無此課程';
-    }
-}
-else if(isset($_POST['courseName'])){
-  $courseName = $_POST['courseName'];
-  $sql = "SELECT * FROM course where course_name like \"" . $courseName . "%\";";
-  $result = mysqli_query($conn, $sql) or die('MySQL query error');
-   if ($result != null) {
+} else if (isset($_POST['courseName'])) {
+    $courseName = $_POST['courseName'];
+    $sql = "SELECT * FROM course where course_name like \"" . $courseName . "%\";";
+    $result = mysqli_query($conn, $sql) or die('MySQL query error');
+    if ($result->num_rows > 0) {
         echo '<table border="1">
       <tr>
         <td>course_id</td>
@@ -111,6 +109,9 @@ else if(isset($_POST['courseName'])){
             echo '</tr>';
         }
         echo '</table>';
+    } else {
+        echo '<p>查無此課程<p>';
+
     }
 }
 

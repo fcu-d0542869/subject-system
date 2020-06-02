@@ -46,16 +46,21 @@ if (isset($_POST['code'])) {
     $totalCredit = 0;
     $codeCredit = 0;
     $underCredit = false;
+    $mycourse = array();
+    $noJoin = false;
     $codeClass = array();
     $className = null;
+    $noCourse = false;
 
-    $sql = "SELECT sum(credit) as totalcredit FROM select_list  NATURAL JOIN course where student_id = \"" . $studentID . "\";";
+    $sql = "SELECT sum(credit) as totalcredit , course_id  FROM select_list  NATURAL JOIN course where student_id = \"" . $studentID . "\";";
     $result = mysqli_query($conn, $sql) or die('MySQL query error');
     if ($result->num_rows > 0) {
         while ($row = mysqli_fetch_array($result)) {
+            array_push($mycourse, $row['course_id']);
             $totalCredit = $row['totalcredit'];
         }
     }
+
     $sql = "SELECT credit, class_name FROM course where course_id = \"" . $code . "%\";";
     $result = mysqli_query($conn, $sql) or die('MySQL query error');
     if ($result->num_rows > 0) {
@@ -63,29 +68,41 @@ if (isset($_POST['code'])) {
             array_push($codeClass, $row['class_name']);
             $codeCredit = $row['credit'];
         }
+    } else {
+        $noCourse = true;
+        echo '<p>查無此課程<p>';
     }
-    if ($totalCredit - $codeCredit < 9 && $codeCredit > 0) {
-        $underCredit = true;
-        echo '<p>退選後學分低於9學分<p>';
-    }
 
-    if ($underCredit != true) {
-        $sql = "SELECT class_name FROM student  where student_id = \"" . $studentID . "\";";
-        $result = mysqli_query($conn, $sql) or die('MySQL query error');
+    if ($noCourse != true) {
 
-        if ($result->num_rows > 0) {
-            while ($row = mysqli_fetch_array($result)) {
-                $className = $row['class_name'];
-            }
+        if (!in_array($code, $mycourse)) {
+            echo '你沒有選此課程';
+            $noJoin = true;
+        }
+        if ($totalCredit - $codeCredit < 9 && $codeCredit > 0 && $totalCredit > 0) {
+            $underCredit = true;
+            echo '<p>退選後學分低於9學分<p>';
+        }
 
-            for ($i = 0; $i < count($codeClass); $i++) {
-                if ($className == $codeClass[$i]) {
-                    echo '退選此課程是必修課';
+        if ($underCredit != true && $noJoin != true) {
+            $sql = "SELECT class_name FROM student  where student_id = \"" . $studentID . "\";";
+            $result = mysqli_query($conn, $sql) or die('MySQL query error');
+
+            if ($result->num_rows > 0) {
+                while ($row = mysqli_fetch_array($result)) {
+                    $className = $row['class_name'];
                 }
-                $sql = "DELETE  FROM select_list  where course_id = \"" . $code . "\" AND student_id = \"" . $studentID . "\" ;";
-                $result = mysqli_query($conn, $sql) or die('MySQL query error');
-                echo '退選成功';
+
+                for ($i = 0; $i < count($codeClass); $i++) {
+                    if ($className == $codeClass[$i]) {
+                        echo '退選此課程是必修課';
+                    }
+                    $sql = "DELETE  FROM select_list  where course_id = \"" . $code . "\" AND student_id = \"" . $studentID . "\" ;";
+                    $result = mysqli_query($conn, $sql) or die('MySQL query error');
+                    echo '退選成功';
+                }
             }
+
         }
 
     }
