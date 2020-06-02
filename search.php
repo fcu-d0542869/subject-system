@@ -1,3 +1,4 @@
+<h1>搜尋課程</h1>
 <a href = "index.php"> 重新登入</a> <p>
 <a href = "home.php">回到選單頁</a>
 
@@ -84,7 +85,7 @@ if (isset($_POST['code'])) {
     }
 } else if (isset($_POST['courseName'])) {
     $courseName = $_POST['courseName'];
-    $sql = "SELECT * FROM course where course_name like \"" . $courseName . "%\";";
+    $sql = "SELECT * FROM course where course_name like  \"%" . $courseName . "%\";";
     $result = mysqli_query($conn, $sql) or die('MySQL query error');
     if ($result->num_rows > 0) {
         echo '<table border="1">

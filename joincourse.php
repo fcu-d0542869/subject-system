@@ -1,3 +1,4 @@
+<h1>選課頁面</h1>
 <a href = "index.php"> 重新登入</a> <p>
 <a href = "home.php">回到選單頁</a>
 
