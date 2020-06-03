@@ -10,6 +10,23 @@ init: <input name="init" value=1>
 <input type="submit" value="送出">
 </form>
 
+<script>
+  function warning () {
+    var xhttp;
+    xhttp = new XMLHttpRequest();
+    if(confirm('test')) {
+      console.log('true');
+      xhttp.open("POST", "init.php", true);
+      xhttp.send(null);
+    } else {
+      console.log('false');
+    }
+    
+  }
+</script>
+
+<a href="#" href="#" onClick="warning()">Please Click</a>
+
 
 <?php
 if (isset($_POST['init'])) {
