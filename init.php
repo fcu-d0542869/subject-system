@@ -1,33 +1,4 @@
-<form name="form1" method="post" action="home.php" >
-輸入學號: <input name="studentID">
-<input type="submit" value="送出">
-</form>
-<!-- <a href="action.php">選課資訊</a> -->
-
-<br><br>
-
-
-<script>
-  function warning () {
-    var xhttp;
-    xhttp = new XMLHttpRequest();
-    if(confirm('test')) {
-      console.log('true');
-      xhttp.open("POST", "init.php", true);
-      xhttp.send(null);
-    } else {
-      console.log('false');
-    }
-
-  }
-</script>
-<a href="#" href="#" onClick="warning()">預選課成初始化</a>
-
-
 <?php
-if (isset($_POST['init'])) {
-    $init = $_POST['init'];
-    if ($init == 1) {
         $initCourse = array();
         $dbhost = '127.0.0.1';
         $dbuser = 'test';
@@ -59,7 +30,6 @@ if (isset($_POST['init'])) {
             echo '初始化';
         }
 
-    }
-}
-?>
+    
 
+?>

@@ -23,7 +23,6 @@ table{
 </style>
 
 <?php
-
 $dbhost = '127.0.0.1';
 $dbuser = 'test';
 $dbpass = 'test1234';

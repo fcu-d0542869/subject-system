@@ -22,10 +22,6 @@ if ($_COOKIE["studentID"] != null) {
         mysqli_query($conn, $courseTime) or die('MySQL query error');
     }
 }
-
-
-
-
 ?>
 
 <br><a href="search.php">查詢選課資訊</a>
