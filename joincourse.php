@@ -114,11 +114,11 @@ if (isset($_POST['code'])) {
     }
     if ($overCredit != true && $sameTime != true) {
 
-        $sql = "SELECT sum(credit) as totalcredit FROM select_list  NATURAL JOIN course where student_id = \"" . $studentID . "\";";
+        $sql = "SELECT  DISTINCT course_id ,credit FROM select_list  NATURAL JOIN course where student_id = \"" . $studentID . "\";";
         $result = mysqli_query($conn, $sql) or die('MySQL query error');
         if ($result->num_rows > 0) {
             while ($row = mysqli_fetch_array($result)) {
-                $totalCredit = $row['totalcredit'];
+                $totalCredit =$totalCredit+$row['credit'];
             }
         }
         $sql = "SELECT credit FROM course where course_id = \"" . $code . "%\";";
