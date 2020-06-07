@@ -47,7 +47,7 @@ if ($studentID != null) {
         $result = mysqli_query($conn, $courseTime) or die('MySQL query error');
     }
 
-    $sql = "SELECT DISTINCT(course_id),course_name,class_name,credit,major,section,teacher_name,day,time FROM select_list  NATURAL JOIN coursetime  where student_id = \"" . $studentID . "\" ORDER BY course_id;";
+    $sql = "SELECT DISTINCT(course_id),course_name,class_name,credit,major,section,teacher_name,day,time FROM select_list  NATURAL JOIN coursetime  where student_id = \"" . $studentID . "\" ORDER BY day ASC;";
 
     $result = mysqli_query($conn, $sql) or die('MySQL query error');
     echo '<table border="1">
