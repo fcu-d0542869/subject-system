@@ -88,7 +88,6 @@ if (isset($_POST['code'])) {
             $codeCredit = $row['credit'];
         }
 
-        print_r($codeClass);
     } else {
         $noCourse = true;
         echo '<p>查無此課程<p>';

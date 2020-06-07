@@ -11,7 +11,7 @@
   function warning () {
     var xhttp;
     xhttp = new XMLHttpRequest();
-    if(confirm('test')) {
+    if(confirm('預選課成初始化')) {
       console.log('true');
       xhttp.open("POST", "init.php", true);
       xhttp.send(null);

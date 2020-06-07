@@ -61,8 +61,7 @@ if (isset($_POST['code'])) {
                 echo '已選該課程';
             }
         }
-    }
-    else{
+    } else {
         $error = true;
         echo '查無此課程';
     }
@@ -71,7 +70,7 @@ if (isset($_POST['code'])) {
         $result = mysqli_query($conn, $sql) or die('MySQL query error');
         if ($result->num_rows > 0) {
             while ($row = mysqli_fetch_array($result)) {
-                // echo '<p>'.$row['course_name'].'<p>';
+                echo '<p>' . $row['course_name'] . '<p>';
                 array_push($studentCourseName, $row['course_name']);
             }
             for ($i = 0; $i < count($studentCourseName); $i++) {
@@ -112,7 +111,7 @@ if (isset($_POST['code'])) {
         //print_r($codeTime);
 
     }
-    if ($overCredit != true && $sameTime != true) {
+    if ($overCredit != true && $sameTime != true && $error != true) {
 
         $sql = "SELECT sum(credit) as totalcredit FROM select_list  NATURAL JOIN course where student_id = \"" . $studentID . "\";";
         $result = mysqli_query($conn, $sql) or die('MySQL query error');
@@ -134,7 +133,7 @@ if (isset($_POST['code'])) {
         }
     }
 
-    if ($overSeat != true && $overCredit != true) {
+    if ($overSeat != true && $overCredit != true && $sameTime != true && $error != true) {
         $sql = "SELECT seat,current_seat FROM seat where course_id = \"" . $code . "%\";";
         if ($result->num_rows > 0) {
             $result = mysqli_query($conn, $sql) or die('MySQL query error');
@@ -142,15 +141,16 @@ if (isset($_POST['code'])) {
                 if ($row['current_seat'] >= $row['seat']) {
                     $overSeat = true;
                     echo '<p>沒有位置了<p>';
+                } else {
+                    if ($error != true && $sameTime != true && $overCredit != true && $overSeat != true) {
+                        $sql = "INSERT INTO select_list VALUES ('$studentID','$code');";
+                        $join = mysqli_query($conn, $sql) or die('MySQL query error');
+                        echo '<p>選課成功<p>';
+                    }
+
                 }
             }
         }
-    }
-
-    if ($error != true && $sameTime != true && $overCredit != true && $overSeat != true) {
-        $sql = "INSERT INTO select_list VALUES ('$studentID','$code');";
-        $result = mysqli_query($conn, $sql) or die('MySQL query error');
-        echo '<p>選課成功<p>';
     }
 
 }
