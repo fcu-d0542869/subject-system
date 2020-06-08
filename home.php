@@ -15,12 +15,16 @@ if ($_COOKIE["studentID"] != null) {
 
     mysqli_query($conn, "SET NAMES 'utf8'");
     mysqli_select_db($conn, $dbname);
-    $sql = "SELECT * FROM coursetime";
-    $result = mysqli_query($conn, $sql) or die('MySQL query error');
-    if ($result == null) {
+    
+    $checkView = "SELECT * FROM coursetime;";
+    $result = mysqli_query($conn, $checkView) or die('MySQL query error');
+
+    if($result->num_rows === 0){
         $courseTime = "CREATE VIEW coursetime AS SELECT * FROM course  NATURAL JOIN course_time";
-        mysqli_query($conn, $courseTime) or die('MySQL query error');
+        $result = mysqli_query($conn, $courseTime) or die('MySQL query error');
     }
+
+
 }
 ?>
 

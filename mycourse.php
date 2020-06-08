@@ -28,24 +28,24 @@ if ($studentID != null) {
     mysqli_query($conn, "SET NAMES 'utf8'");
     mysqli_select_db($conn, $dbname);
 
-    $totalCredit=0;
+    $totalCredit = 0;
     $sql = "SELECT  DISTINCT course_id ,credit FROM select_list  NATURAL JOIN course where student_id = \"" . $studentID . "\";";
     $result = mysqli_query($conn, $sql) or die('MySQL query error');
     if ($result->num_rows > 0) {
         while ($row = mysqli_fetch_array($result)) {
-            $totalCredit =$totalCredit+$row['credit'];
-            
+            $totalCredit = $totalCredit + $row['credit'];
+
         }
-        echo '目前學分: '.$totalCredit;
+        echo '目前學分: ' . $totalCredit;
 
     }
-    $checkView = "SELECT * FROM coursetime;";
-    $result = mysqli_query($conn, $checkView) or die('MySQL query error');
+    // $checkView = "SELECT * FROM coursetime;";
+    // $result = mysqli_query($conn, $checkView) or die('MySQL query error');
 
-    if($result->num_rows === 0){
-        $courseTime = "CREATE VIEW coursetime AS SELECT * FROM course  NATURAL JOIN course_time";
-        $result = mysqli_query($conn, $courseTime) or die('MySQL query error');
-    }
+    // if($result->num_rows === 0){
+    //     $courseTime = "CREATE VIEW coursetime AS SELECT * FROM course  NATURAL JOIN course_time";
+    //     $result = mysqli_query($conn, $courseTime) or die('MySQL query error');
+    // }
 
     $sql = "SELECT DISTINCT(course_id),course_name,class_name,credit,major,section,teacher_name,day,time FROM select_list  NATURAL JOIN coursetime  where student_id = \"" . $studentID . "\" ORDER BY day ASC;";
 

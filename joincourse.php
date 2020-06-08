@@ -23,23 +23,28 @@ table{
 </style>
 
 <?php
-$dbhost = '127.0.0.1';
-$dbuser = 'test';
-$dbpass = 'test1234';
-$dbname = 'course';
-$conn = mysqli_connect($dbhost, $dbuser, $dbpass) or die('Error with MySQL connection');
-mysqli_query($conn, "SET NAMES 'utf8'");
-mysqli_select_db($conn, $dbname);
-$sql = "SELECT * FROM select_list where student_id = \"" . $studentID . "\";";
-$result = mysqli_query($conn, $sql) or die('MySQL query error');
-$studentCourseID = array();
-$studentCourseName = array();
-while ($row = mysqli_fetch_array($result)) {
-    array_push($studentCourseID, $row['course_id']);
-}
-
 if (isset($_POST['code'])) {
     $code = $_POST['code'];
+    $dbhost = '127.0.0.1';
+    $dbuser = 'test';
+    $dbpass = 'test1234';
+    $dbname = 'course';
+    $conn = mysqli_connect($dbhost, $dbuser, $dbpass) or die('Error with MySQL connection');
+    mysqli_query($conn, "SET NAMES 'utf8'");
+    mysqli_select_db($conn, $dbname);
+    $sql = "SELECT * FROM select_list where student_id = \"" . $studentID . "\";";
+    $result = mysqli_query($conn, $sql) or die('MySQL query error');
+    $studentCourseID = array();
+    $studentCourseName = array();
+    while ($row = mysqli_fetch_array($result)) {
+        array_push($studentCourseID, $row['course_id']);
+    }
+    for ($i = 0; $i < count($studentCourseID); $i++) {
+        if ($studentCourseID[$i] == $code) {
+            $error = true;
+            echo '已選該課程';
+        }
+    }
     $error = false;
     $sameTime = false;
     $overCredit = false;
@@ -55,19 +60,13 @@ if (isset($_POST['code'])) {
         while ($row = mysqli_fetch_array($result)) {
             $selectCourse = $row['course_name'];
         }
-        for ($i = 0; $i < count($studentCourseID); $i++) {
-            if ($studentCourseID[$i] == $code) {
-                $error = true;
-                echo '已選該課程';
-            }
-        }
-    }
-    else{
+
+    } else {
         $error = true;
         echo '查無此課程';
     }
     if ($error != true) {
-        $sql = "SELECT * FROM select_list  NATURAL JOIN course where student_id = \"" . $studentID . "\";";
+        $sql = "SELECT course_name FROM select_list  NATURAL JOIN course where student_id = \"" . $studentID . "\";";
         $result = mysqli_query($conn, $sql) or die('MySQL query error');
         if ($result->num_rows > 0) {
             while ($row = mysqli_fetch_array($result)) {
@@ -112,13 +111,13 @@ if (isset($_POST['code'])) {
         //print_r($codeTime);
 
     }
-    if ($overCredit != true && $sameTime != true) {
+    if ($overCredit != true && $sameTime != true && $error != true) {
 
         $sql = "SELECT  DISTINCT course_id ,credit FROM select_list  NATURAL JOIN course where student_id = \"" . $studentID . "\";";
         $result = mysqli_query($conn, $sql) or die('MySQL query error');
         if ($result->num_rows > 0) {
             while ($row = mysqli_fetch_array($result)) {
-                $totalCredit =$totalCredit+$row['credit'];
+                $totalCredit = $totalCredit + $row['credit'];
             }
         }
         $sql = "SELECT credit FROM course where course_id = \"" . $code . "%\";";
@@ -134,7 +133,7 @@ if (isset($_POST['code'])) {
         }
     }
 
-    if ($overSeat != true && $overCredit != true) {
+    if ($error != true && $sameTime != true && $overCredit != true && $overSeat != true) {
         $sql = "SELECT seat,current_seat FROM seat where course_id = \"" . $code . "%\";";
         if ($result->num_rows > 0) {
             $result = mysqli_query($conn, $sql) or die('MySQL query error');
